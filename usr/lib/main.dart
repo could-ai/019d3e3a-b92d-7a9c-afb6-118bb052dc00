@@ -57,15 +57,17 @@ class BusinessPlanScreen extends StatelessWidget {
               content: "Création d'une unité industrielle de production de briques (SARL BRIQUETERIE BMO) située à Touggourt, Algérie. Le projet vise à répondre à la forte demande en matériaux de construction dans le sud algérien et sur le territoire national, en valorisant les ressources locales.",
             ),
             _buildFinancialSection(context),
+            _buildFinancialChartSection(context), // NOUVEAU GRAPHIQUE
             _buildSection(
               context,
               title: '3. Production & Ressources Humaines',
-              icon: Icons.precision_manufacturing,
+              icon: Icons.people_alt,
               content: "• Capacité de production estimée : 5 Millions de tonnes.\n• Création d'emplois : 40 postes directs, contribuant au développement socio-économique de la région de Touggourt.\n• Processus industriel optimisé pour garantir une qualité supérieure et un rendement maximal.",
             ),
+            _buildEquipmentSection(context), // NOUVELLE SECTION ÉQUIPEMENTS
             _buildSection(
               context,
-              title: '4. Localisation Stratégique',
+              title: '5. Localisation Stratégique',
               icon: Icons.location_on,
               content: "Implantation à Touggourt. Cette localisation offre un accès privilégié aux matières premières (argile) et constitue un carrefour logistique stratégique pour la distribution vers les wilayas du Sud et les hauts plateaux.",
             ),
@@ -354,6 +356,217 @@ class BusinessPlanScreen extends StatelessWidget {
                 fontSize: 15,
               ),
               textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFinancialChartSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.bar_chart, color: Theme.of(context).colorScheme.primary),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Projection Financière (15 ans)',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(height: 24),
+              Text(
+                "Évolution estimée de la trésorerie et début de l'amortissement (1%) à partir de la 6ème année.",
+                style: TextStyle(color: Colors.grey[700], fontSize: 14),
+              ),
+              const SizedBox(height: 32),
+              SizedBox(
+                height: 220,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(15, (index) {
+                    int year = index + 1;
+                    bool isGracePeriod = year <= 5;
+                    
+                    // Simulation visuelle des données
+                    double cashFlowHeight = 80.0 + (year * 6); 
+                    double repaymentHeight = isGracePeriod ? 0 : 30.0 + (year * 2); 
+
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Barre de trésorerie
+                        Container(
+                          width: 14,
+                          height: cashFlowHeight,
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade400,
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        // Barre de remboursement
+                        Container(
+                          width: 14,
+                          height: repaymentHeight,
+                          decoration: BoxDecoration(
+                            color: isGracePeriod ? Colors.transparent : Theme.of(context).colorScheme.primary,
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "A$year",
+                          style: TextStyle(
+                            fontSize: 11, 
+                            color: isGracePeriod ? Colors.grey[600] : Theme.of(context).colorScheme.primary,
+                            fontWeight: isGracePeriod ? FontWeight.normal : FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildLegendItem(Colors.green.shade400, "Trésorerie générée"),
+                  const SizedBox(width: 16),
+                  _buildLegendItem(Theme.of(context).colorScheme.primary, "Amortissement (1%)"),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLegendItem(Color color, String label) {
+    return Row(
+      children: [
+        Container(
+          width: 12, 
+          height: 12, 
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(3),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+      ],
+    );
+  }
+
+  Widget _buildEquipmentSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.precision_manufacturing, color: Theme.of(context).colorScheme.primary),
+                  const SizedBox(width: 12),
+                  const Text(
+                    '4. Équipements & Infrastructures',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(height: 24),
+              _buildEquipmentItem(
+                context, 
+                icon: Icons.local_fire_department, 
+                title: 'Four Tunnel Continu', 
+                desc: 'Cuisson haute température optimisée pour une production de masse.'
+              ),
+              _buildEquipmentItem(
+                context, 
+                icon: Icons.air, 
+                title: 'Séchoir Industriel', 
+                desc: 'Réduction rapide de l\'humidité des briques crues avant cuisson.'
+              ),
+              _buildEquipmentItem(
+                context, 
+                icon: Icons.view_stream, 
+                title: 'Ligne d\'Extrusion', 
+                desc: 'Moulage, compactage et découpe automatique de l\'argile.'
+              ),
+              _buildEquipmentItem(
+                context, 
+                icon: Icons.settings_suggest, 
+                title: 'Broyeurs et Malaxeurs', 
+                desc: 'Préparation et traitement de la matière première (argile de Touggourt).'
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEquipmentItem(BuildContext context, {required IconData icon, required String title, required String desc}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: Colors.grey.shade700, size: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  desc,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13, height: 1.4),
+                ),
+              ],
             ),
           ),
         ],
